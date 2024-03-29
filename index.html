@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Viewer</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+        #image-container {
+            position: relative;
+            width: 500px; /* Ajusta el tamaño según tus necesidades */
+            display: absolute;
+            overflow: hidden;
+        }
+        #image-container img {
+            max-width: 100%;
+        }
+        #zoom-controls {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+        }
+        #zoom-controls button {
+            padding: 5px 10px;
+            margin-right: 5px;
+        }
+        #brightness-slider {
+            width: 100px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        /* es necesario definir la escala inicial de la imagen para que funcione correctamente */
+        #main-image {
+            transform: scale(1);
+            transition: transform 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div id="image-container">
+        <img src="central-park-new-york-usa.jpg" id="main-image" alt="Imagen">
+        <div id="zoom-controls">
+            <button id="zoom-in">+</button>
+            <button id="zoom-out">-</button>
+            <button id="translate-right">></button>
+            <button id="translate-left"><</button>
+            <button id="translate-up">up</button>
+            <button id="translate-down">down</button>
+            <label for="brightness-slider">Brillo:</label>
+            <div id="brightness-slider"></div>
+            <button id="reset">reset</button>
+
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Inicializar el slider de brillo
+            $("#brightness-slider").slider({
+                min: 0,
+                max: 200,
+                value: 100,
+                slide: function(event, ui) {
+                    var brightnessValue = ui.value;
+                    $("#main-image").css("filter", "brightness(" + brightnessValue + "%)");
+                }
+            });
+
+            
+            // Acercar
+            $("#zoom-in").click(function() {
+                var currentScale = parseFloat($("#main-image").css("transform").split(",")[3]);
+                var currentX = parseFloat($("#main-image").css("transform").split(",")[4]);
+                var currentY = parseFloat($("#main-image").css("transform").split(",")[5]);
+                var newScale = currentScale + 0.2;
+                console.log(currentScale+' -> '+newScale);
+                $("#main-image").css("transform", "scale(" + newScale + ") translateX(" + currentX + "px) translateY(" + currentY + "px)");
+            });
+
+            // Alejar
+            $("#zoom-out").click(function() {
+                var currentScale = parseFloat($("#main-image").css("transform").split(",")[3]);
+                var currentX = parseFloat($("#main-image").css("transform").split(",")[4]);
+                var currentY = parseFloat($("#main-image").css("transform").split(",")[5]);
+                var newScale = currentScale - 0.2;
+                console.log(currentScale+' -> '+newScale);
+                $("#main-image").css("transform", "scale(" + newScale + ") translateX(" + currentX + "px) translateY(" + currentY + "px)");
+            });
+
+
+            // Mover a la derecha
+            $("#translate-right").click(function() {
+                var currentScale = parseFloat($("#main-image").css("transform").split(",")[3]);
+                var currentX = parseFloat($("#main-image").css("transform").split(",")[4]);
+                var currentY = parseFloat($("#main-image").css("transform").split(",")[5]);
+                var newX = currentX + 50;
+                console.log(currentX+' -> '+newX);
+                $("#main-image").css("transform", "scale(" + currentScale + ") translateX(" + newX + "px) translateY(" + currentY + "px)");
+            });
+
+            // Mover a la izquierda
+            $("#translate-left").click(function() {
+                var currentScale = parseFloat($("#main-image").css("transform").split(",")[3]);
+                var currentX = parseFloat($("#main-image").css("transform").split(",")[4]);
+                var currentY = parseFloat($("#main-image").css("transform").split(",")[5]);
+                var newX = currentX - 50;
+                console.log(currentX+' -> '+newX);
+                $("#main-image").css("transform", "scale(" + currentScale + ") translateX(" + newX + "px) translateY(" + currentY + "px)");
+            });
+
+            // Mover hacia arriba
+            $("#translate-up").click(function() {
+                var currentScale = parseFloat($("#main-image").css("transform").split(",")[3]);
+                var currentX = parseFloat($("#main-image").css("transform").split(",")[4]);
+                var currentY = parseFloat($("#main-image").css("transform").split(",")[5]);
+                var newY = currentY - 50;
+                console.log(currentY+' -> '+newY);
+                $("#main-image").css("transform", "scale(" + currentScale + ") translateX(" + currentX + "px) translateY(" + newY + "px)");
+            });
+
+            // Mover hacia abajo
+            $("#translate-down").click(function() {
+                var currentScale = parseFloat($("#main-image").css("transform").split(",")[3]);
+                var currentX = parseFloat($("#main-image").css("transform").split(",")[4]);
+                var currentY = parseFloat($("#main-image").css("transform").split(",")[5]);
+                var newY = currentY + 50;
+                console.log(currentY+' -> '+newY);
+                $("#main-image").css("transform", "scale(" + currentScale + ") translateX(" + currentX + "px) translateY(" + newY + "px)");
+            });
+
+            // Reset
+            $("#reset").click(function() {
+                $("#main-image").css("transform", "scale(1) translateX(0px) translateY(0px)");
+                $("#brightness-slider").slider("value", 100);
+                $("#main-image").css("filter", "brightness(100%)");
+            });
+                      
+            
+        });
+    </script>
+</body>
+</html>
